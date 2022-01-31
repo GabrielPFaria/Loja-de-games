@@ -21,38 +21,41 @@ import br.org.generation.lojadegames.model.Categoria;
 import br.org.generation.lojadegames.repository.CategoriaRepository;
 
 @RestController
-@RequestMapping("/categoria")
+@RequestMapping("/categorias")
 @CrossOrigin(origins = "*", allowedHeaders ="*")
 public class CategoriaController {
 	
 	@Autowired
 	private CategoriaRepository categoriaRepository;
-
+	
 	@GetMapping
-	public ResponseEntity<List<Categoria>> getAll() {
+	private ResponseEntity<List<Categoria>> getAll(){
+		
 		return ResponseEntity.ok(categoriaRepository.findAll());
-
 	}
-
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<Categoria> getById(@PathVariable Long id) {
+	public ResponseEntity<Categoria> getById(@PathVariable long id){
+		
 		return categoriaRepository.findById(id)
-			.map(resposta -> ResponseEntity.ok(resposta))
+			.map(resp -> ResponseEntity.ok(resp))
 			.orElse(ResponseEntity.notFound().build());
 	}
-
-	@GetMapping("/descricao/{descricao}")
-	public ResponseEntity<List<Categoria>> getByDescricao(@PathVariable String nomecategoria) {
-		return ResponseEntity.ok(categoriaRepository.findAllBynomecategoriaContainingIgnoreCase(nomecategoria));
+	
+	@GetMapping("/tipo/{tipo}")
+	public ResponseEntity<List<Categoria>> getByTipo(@PathVariable String tipo){
+		
+		return ResponseEntity.ok(categoriaRepository.findAllByTipoContainingIgnoreCase(tipo));	
 	}
-
+	
 	@PostMapping
-	public ResponseEntity<Categoria> postTema(@Valid @RequestBody Categoria categoria) {
+	public ResponseEntity<Categoria> postCategoria(@Valid @RequestBody Categoria categoria){
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaRepository.save(categoria));
 	}
-
+	
 	@PutMapping
-	public ResponseEntity<Categoria> putTema(@Valid @RequestBody Categoria categoria) {
+	public ResponseEntity<Categoria> putCategoria(@Valid @RequestBody Categoria categoria) {
 					
 		return categoriaRepository.findById(categoria.getId())
 				.map(resposta -> {
@@ -63,7 +66,7 @@ public class CategoriaController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deletePostagem(@PathVariable Long id) {
+	public ResponseEntity<?> deleteCategoria(@PathVariable long id) {
 		
 		return categoriaRepository.findById(id)
 				.map(resposta -> {
@@ -73,5 +76,6 @@ public class CategoriaController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-
+	
+	
 }
